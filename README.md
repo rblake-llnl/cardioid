@@ -23,7 +23,6 @@ We recommend compiling Cardioid using [Spack](https://github.com/LLNL/spack).
 
 To build Cardioid with spack, follow the following steps:
 
-* Make a YAML file for your particular cluster telling the system where to find MPI, what compilers to use, where to find lapack, etc. Examples can be found in arch/*.yaml. [Read here](https://spack.readthedocs.io/en/latest/tutorial_environments.html#spack-yaml) for more information on the syntax for this YAML file.
 
 * Clone [Spack](https://spack.io) and set it up:
    ```
@@ -31,6 +30,11 @@ To build Cardioid with spack, follow the following steps:
    . spack/share/spack/setup-env.sh
    ```
    
+* Make a YAML file for your particular cluster telling the system where to find MPI, what compilers to use, where to find lapack, etc. Examples can be found in arch/*.yaml. Use our provided script to create a spack environment for your cluster system.
+   ```
+   ./setup_spack.pl > arch/YOURENV.yaml
+   ```
+
 * Install your YAML file as a spack environment.
    ```
    spack env create YOURENV arch/YOURENV.yaml
@@ -41,16 +45,14 @@ To build Cardioid with spack, follow the following steps:
    spack env activate YOURENV
    ```
 
-* Build the cardioid dependencies
+* Build the cardioid from the current directory:
    ```
-   spack install mfem+hypre+lapack
+   spack diy cardioid
+   # build cardioid with all the bells and whistles
+   # spack diy cardioid+mfem
    ```
+   *IMPORTANT:* You must kill the build process after it finishes the configure step for Cardioid, as you don't actually want the build to complete.
    
-* Install the dependencies into a directory called deps
-   ```
-   spack view symlink deps mfem+hypre+lapack
-   ```
-
 * Build the rest of Cardioid, using the default settings
    ```
    make build
